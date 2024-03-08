@@ -1,11 +1,16 @@
 import React from "react";
+import { MdOutlineContentCopy } from "react-icons/md";
+import { PiExportBold } from "react-icons/pi";
+import { FiTwitter } from "react-icons/fi";
+import { IoSettingsOutline } from "react-icons/io5";
+import { MdOutlineColorLens } from "react-icons/md";
 
 function App() {
   const containerStyle = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "70vh",
+    height: "73vh",
     backgroundColor: "#212529",
   };
 
@@ -50,13 +55,18 @@ function App() {
   };
 
   const buttonStyle = {
+    height: "40px",
     marginRight: "10px",
-    padding: "5px 10px",
+    padding: "5px 15px",
     borderRadius: "5px",
     border: "none",
     backgroundColor: "#666",
     color: "#fff",
     cursor: "pointer",
+    transition: "background-color 0.3s",
+  };
+  buttonStyle[":hover"] = {
+    backgroundColor: "#888",
   };
 
   return (
@@ -64,36 +74,42 @@ function App() {
       <div style={formularioStyle}>
         <div style={navBarStyle}>
           <select style={selectStyle}>
+            <option value="" hidden>
+              Theme
+            </option>
             <option value="opcion1">Opción 1</option>
             <option value="opcion2">Opción 2</option>
             <option value="opcion3">Opción 3</option>
           </select>
           <select style={selectStyle}>
-            <option value="opcion1">Opción 1</option>
-            <option value="opcion2">Opción 2</option>
-            <option value="opcion3">Opción 3</option>
+            <option value="" hidden>
+              Language
+            </option>
+            <option value="opcion1">JS</option>
+            <option value="opcion3">JSON</option>
+            <option value="opcion2">JSX</option>
+            <option value="opcion3">HTML</option>
           </select>
-          <select style={selectStyle}>
-            <option value="opcion1">Opción 1</option>
-            <option value="opcion2">Opción 2</option>
-            <option value="opcion3">Opción 3</option>
-          </select>
-          <select style={selectStyle}>
-            <option value="opcion1">Opción 1</option>
-            <option value="opcion2">Opción 2</option>
-            <option value="opcion3">Opción 3</option>
-          </select>
+          <div style={navBarStyle}>
+            <button style={buttonStyle} disabled>
+              <IoSettingsOutline />
+            </button>
+            <button style={buttonStyle} disabled>
+              <MdOutlineContentCopy />
+            </button>
+            <button style={buttonStyle} disabled>
+              <FiTwitter />
+            </button>
+            <button style={buttonStyle}>
+              <PiExportBold />
+            </button>
+          </div>
         </div>
         <input
           type="text"
-          placeholder="Ingrese su codigo aquí"
+          placeholder="Type your code here"
           style={inputStyle}
         />
-        <div style={navBarStyle}>
-          <button style={buttonStyle}>Botón 1</button>
-          <button style={buttonStyle}>Botón 2</button>
-          <button style={buttonStyle}>Botón 3</button>
-        </div>
       </div>
     </div>
   );
