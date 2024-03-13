@@ -1,22 +1,20 @@
 import React, { useState, useRef } from "react";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { PiExportBold } from "react-icons/pi";
-import { FiTwitter } from "react-icons/fi";
-import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineColorLens } from "react-icons/md";
 import { ChromePicker } from "react-color";
 import CodeEditor from "@uiw/react-textarea-code-editor";
-import Highlighter from "./common/CodeHighlighter";
-// import htmlToImage from "html-to-image";
+import { toPng } from "html-to-image"; // Importar toPng específicamente
 
 function App() {
   const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`);
-  const [backgroundColor, setBackgroundColor] = useState("#555"); // Estado para el color de fondo del subcontenedor
-  const [displayColorPicker, setDisplayColorPicker] = useState(false); // Estado para mostrar/ocultar el color picker
-  const [inputValue, setInputValue] = useState(""); // Estado para el valor del input
-  const [copied, setCopied] = useState(false); // Estado para controlar si se ha copiado el contenido
+  const [backgroundColor, setBackgroundColor] = useState("#555");
+  const [displayColorPicker, setDisplayColorPicker] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("html");
+  const [selectedTheme, setSelectedTheme] = useState("dark");
 
-  const containerRef = useRef(null); // Referencia al contenedor principal
+  const containerRef = useRef(null);
 
   const containerStyle = {
     display: "flex",
@@ -27,7 +25,7 @@ function App() {
   };
 
   const subContainerStyle = {
-    backgroundColor: "#333", // Usando el color de fondo del estado
+    backgroundColor: "#333",
     width: "800px",
     padding: "20px",
     borderRadius: "10px",
@@ -42,19 +40,6 @@ function App() {
     boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
     textAlign: "center",
     color: "#fff",
-  };
-
-  const inputStyle = {
-    width: "100%",
-    height: "300px",
-    marginBottom: "10px",
-    padding: "5px",
-    borderRadius: "5px",
-    border: "none",
-    backgroundColor: "#444",
-    color: "#fff",
-    verticalAlign: "top",
-    textAlign: "left",
   };
 
   const navBarStyle = {
@@ -86,65 +71,92 @@ function App() {
     transition: "background-color 0.3s",
   };
 
+  const themeStyles = {
+    dark: {
+      backgroundColor: "#1E1E1E",
+      color: "#FFFFFF",
+    },
+    light: {
+      backgroundColor: "#FFFFFF",
+      color: "#000000",
+    },
+    duotoneDark: {
+      backgroundColor: "#2A2734",
+      color: "#ABB2BF",
+    },
+    duotoneLight: {
+      backgroundColor: "#F0F4F8",
+      color: "#2D3748",
+    },
+  };
+
   const handleColorChange = (color) => {
-    setBackgroundColor(color.hex); // Actualizar el color de fondo del subcontenedor
+    setBackgroundColor(color.hex);
   };
 
   const handleClick = () => {
-    setDisplayColorPicker(!displayColorPicker); // Mostrar u ocultar el color picker
+    setDisplayColorPicker(!displayColorPicker);
   };
 
   const handleClose = () => {
-    setDisplayColorPicker(false); // Ocultar el color picker cuando se cierra
+    setDisplayColorPicker(false);
   };
 
   const handleInputChange = (event) => {
-    setInputValue(event.target.value); // Actualizar el valor del input
+    setCode(event.target.value);
   };
 
   const handleCopyClick = () => {
-    navigator.clipboard.writeText(inputValue); // Copiar el valor del input al portapapeles
-    setCopied(true); // Establecer el estado de copiado a verdadero
+    navigator.clipboard.writeText(code);
+    setCopied(true);
     setTimeout(() => {
-      setCopied(false); // Restablecer el estado de copiado después de 2 segundos
+      setCopied(false);
     }, 2000);
   };
 
-  // const handleExportClick = () => {
-  //   htmlToImage
-  //     .toPng(containerRef.current)
-  //     .then(function (dataUrl) {
-  //       var link = document.createElement("a");
-  //       link.download = "snippet.png";
-  //       link.href = dataUrl;
-  //       link.click();
-  //     })
-  //     .catch(function (error) {
-  //       console.error("Error exporting snippet:", error);
-  //     });
-  // };
+  const handleLanguageChange = (event) => {
+    setSelectedLanguage(event.target.value);
+  };
+
+  const handleThemeChange = (event) => {
+    setSelectedTheme(event.target.value);
+  };
+
+  const handleExportClick = () => {
+    toPng(containerRef.current) // Utilizar el método toPng importado
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = "code_image.png";
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((error) => {
+        console.error("Error exporting code as image:", error);
+      });
+  };
 
   return (
     <div style={containerStyle}>
       <div style={subContainerStyle} ref={containerRef}>
         <div style={formularioStyle}>
           <div style={navBarStyle}>
-            <select style={selectStyle}>
-              <option value="" hidden>
-                Theme
-              </option>
-              <option value="opcion1">Opción 1</option>
-              <option value="opcion2">Opción 2</option>
-              <option value="opcion3">Opción 3</option>
-            </select>
-            <select style={selectStyle}>
+            <select style={selectStyle} onChange={handleLanguageChange}>
               <option value="" hidden>
                 Language
               </option>
-              <option value="opcion1">JS</option>
-              <option value="opcion3">JSON</option>
-              <option value="opcion2">JSX</option>
-              <option value="opcion3">HTML</option>
+              <option value="js">JS</option>
+              <option value="json">JSON</option>
+              <option value="jsx">JSX</option>
+              <option value="html">HTML</option>
+            </select>
+            <select style={selectStyle} onChange={handleThemeChange}>
+              <option value="" hidden>
+                Theme
+              </option>
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+              <option value="duotoneDark">Duotone Dark</option>
+              <option value="duotoneLight">Duotone Light</option>
             </select>
             <div style={navBarStyle}>
               <button
@@ -154,7 +166,7 @@ function App() {
               >
                 <MdOutlineContentCopy />
               </button>
-              <button style={buttonStyle}>
+              <button style={buttonStyle} onClick={handleExportClick}>
                 <PiExportBold />
               </button>
               <div style={{ position: "relative" }}>
@@ -184,12 +196,13 @@ function App() {
           </div>
           <CodeEditor
             value={code}
-            language="html"
-            placeholder="Please enter JS code."
-            onChange={(evn) => setCode(evn.target.value)}
+            language={selectedLanguage}
+            theme={selectedTheme}
+            placeholder="Please enter code."
+            onChange={handleInputChange}
             padding={15}
             style={{
-              backgroundColor: "#f5f5f5",
+              ...themeStyles[selectedTheme],
               fontFamily:
                 "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
             }}
@@ -201,4 +214,3 @@ function App() {
 }
 
 export default App;
-// onClick={handleExportClick}
