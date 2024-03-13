@@ -25,6 +25,10 @@ const userSchema = mongoose.Schema({
     required: true,
     minlength: 6,
   },
+  favoriteThemes: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);

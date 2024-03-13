@@ -1,10 +1,12 @@
 import React, { useState, useRef } from "react";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { PiExportBold } from "react-icons/pi";
+import { FaRegStar } from "react-icons/fa";
 import { MdOutlineColorLens } from "react-icons/md";
 import { ChromePicker } from "react-color";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import { toPng } from "html-to-image"; // Importar toPng específicamente
+import { Controlled as CodeMirror } from "react-codemirror2";
 
 function App() {
   const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`);
@@ -13,6 +15,7 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("html");
   const [selectedTheme, setSelectedTheme] = useState("dark");
+  const [favoriteThemes, setFavoriteThemes] = useState("");
 
   const containerRef = useRef(null);
 
@@ -68,7 +71,7 @@ function App() {
     backgroundColor: "#666",
     color: "#fff",
     cursor: "pointer",
-    transition: "background-color 0.3s",
+    transition: "box-shadow 0.3s",
   };
 
   const themeStyles = {
@@ -135,6 +138,26 @@ function App() {
       });
   };
 
+  const handleFavoriteThemes = (event) => {
+    setFavoriteThemes(event.target.value);
+  };
+  const makeBold = (editor) => {
+    const selectedText = editor.getSelection();
+    const newText = `**${selectedText}**`; // Markdown para negrita
+    editor.replaceSelection(newText);
+  };
+
+  const options = {
+    lineNumbers: true,
+    mode: "markdown", // Modo markdown para resaltar correctamente el texto en negrita
+    theme: "material",
+    extraKeys: {
+      "Ctrl-B": (editor) => {
+        makeBold(editor); // Llamar a la función makeBold cuando se presiona Ctrl + B
+      },
+    },
+  };
+
   return (
     <div style={containerStyle}>
       <div style={subContainerStyle} ref={containerRef}>
@@ -173,6 +196,9 @@ function App() {
                 <button style={buttonStyle} onClick={handleClick}>
                   <MdOutlineColorLens />
                 </button>
+                <button style={buttonStyle} onClick={handleFavoriteThemes}>
+                  <FaRegStar />
+                </button>
                 {displayColorPicker && (
                   <div style={{ position: "absolute", zIndex: "2" }}>
                     <div
@@ -201,6 +227,7 @@ function App() {
             placeholder="Please enter code."
             onChange={handleInputChange}
             padding={15}
+            options={options}
             style={{
               ...themeStyles[selectedTheme],
               fontFamily:

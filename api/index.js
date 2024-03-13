@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
 const authRoutes = require("./routes/auth");
+const verifyToken = require("./middlewares/verify-token.js");
+const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
@@ -10,18 +12,21 @@ const app = express();
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
-// Conexión a Base de datos
-
-// import routes
+var corsOptions = {
+  origin: "*", // Reemplazar con dominio
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 
 // route middlewares
 app.use("/api/user", authRoutes);
-app.get("/", (req, res) => {
-  res.json({
-    estado: true,
-    mensaje: "funciona!",
-  });
-});
+app.use(cors(corsOptions));
+
+// Conexión a Base de datos
+const uri = `mongodb+srv://joacorodriguez:joacorodriguez@cluster0.sjzxkmd.mongodb.net/?retryWrites=true&w=majority`;
+mongoose
+  .connect(uri)
+  .then(() => console.log("Base de datos conectada"))
+  .catch((e) => console.log("error db:", e));
 
 // iniciar server
 const PORT = process.env.PORT || 3001;
