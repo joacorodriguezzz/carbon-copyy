@@ -18,7 +18,11 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("html");
   const [selectedTheme, setSelectedTheme] = useState("dark");
-  const [favoriteThemes, setFavoriteThemes] = useState("");
+  const [favoriteThemes, setFavoriteThemes] = useState([]);
+  const [email, setEmail] = useState("");
+  const [text, setText] = useState('');
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
 
   // useEffect(async () => {
   //   const email = localStorage.getItem("email");
@@ -41,6 +45,53 @@ function App() {
   //     console.error("Error:", error);
   //   });
   // }, []);
+
+  // useEffect(() => {
+  //   setEmail(localStorage.getItem("email"));
+  // }, []);
+
+  // useEffect(() => {
+  //   fetchFavorites();
+  // }, []);
+
+  // const fetchFavorites = async () => {
+  //   try {
+  //     console.log('hola')
+  //     console.log(email)
+  //     console.log(localStorage.getItem("email"));
+  //     const token = localStorage.getItem("token");
+  //     const email = localStorage.getItem("email");
+  //     const response = await axios.get("http://localhost:3001/api/favourites", {
+  //       headers: { "auth-token": token }, body: { email: email }
+  //     });
+  //     setFavoriteThemes(response.data.favorites);
+  //   } catch (error) {
+  //     console.error("Error fetching favorites:", error);
+  //   }
+  // };
+
+  useEffect(() => {
+    handleGetFavoriteThemes();
+  }, []);
+
+
+  const handleGetFavoriteThemes = () => {
+    axios.post("http://localhost:3001/api/favourites", {
+      email: localStorage.getItem("email"),
+    }, {
+      headers: { "auth-token": localStorage.getItem("token") },
+    })
+    .then((response) => {
+      if (response.data.error) {
+        alert(response.data.error);
+        console.log("error");
+      } else {
+        setFavoriteThemes(response.data.data);
+      }
+    }).catch((error) => {
+      console.error("Error:", error);
+    });
+  };
 
   const containerRef = useRef(null);
 
@@ -134,6 +185,7 @@ function App() {
 
   const handleInputChange = (event) => {
     setCode(event.target.value);
+    setText(event.target.value);
   };
 
   const handleCopyClick = () => {
@@ -166,20 +218,23 @@ function App() {
   };
 
   const handleFavoriteThemes = (event) => {
-    console.log(localStorage.getItem("token").toString());
-    setFavoriteThemes(event.target.value);
     axios.post("http://localhost:3001/api/favourites/add", {
       theme: selectedTheme,
       email: localStorage.getItem("email"),
     }, {
-      "auth-token": localStorage.getItem("token"),
+      headers: { "auth-token": localStorage.getItem("token") },
     })
     .then((response) => {
       if (response.data.error) {
         alert(response.data.error);
         console.log("error");
       } else {
-        alert("Tema favorito agregado correctamente");
+        setFavoriteThemes((prev) => [...prev, selectedTheme]);
+        handleGetFavoriteThemes();
+        handleGetFavoriteThemes();
+        handleGetFavoriteThemes();
+        handleGetFavoriteThemes();
+        handleGetFavoriteThemes();
       }
     })
   };
@@ -201,6 +256,43 @@ function App() {
     },
   };
 
+
+  const handleKeyDown = (event) => {
+    // Verifica si se presiona la tecla deseada, por ejemplo, la tecla 'Ctrl' junto con 'b'
+    if (event.ctrlKey && event.key === 'b') {
+      // Cambia el estado de negrita
+      setIsBold(!isBold);
+      // Evita que se realice la acción por defecto asociada a esa combinación de teclas (por ejemplo, guardar la página)
+      event.preventDefault();
+    }
+
+    if (event.ctrlKey && event.key === 'l') {
+      // cambia a cursiva
+      setIsItalic(!isItalic);
+      event.preventDefault();
+    }
+  };
+
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      // Verifica si se presiona la tecla deseada, por ejemplo, la tecla 'Ctrl' junto con 'S'
+      if (event.ctrlKey && event.key === 's') {
+        // Ejecuta la acción que deseas realizar cuando se presione el atajo de teclado
+        console.log('Guardando...');
+        // Agrega aquí tu lógica adicional, como guardar datos o activar alguna función
+      }
+    }
+
+    // Agrega un listener de eventos de teclado cuando el componente se monta
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Remueve el listener de eventos de teclado cuando el componente se desmonta
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
     <div style={containerStyle}>
       <div style={subContainerStyle} ref={containerRef}>
@@ -216,9 +308,6 @@ function App() {
               <option value="html">HTML</option>
             </select>
             <select style={selectStyle} onChange={handleThemeChange}>
-              <option value="" hidden>
-                Theme
-              </option>
               <option value="dark">Dark</option>
               <option value="light">Light</option>
               <option value="duotoneDark">Duotone Dark</option>
@@ -239,9 +328,11 @@ function App() {
                 <button style={buttonStyle} onClick={handleClick}>
                   <MdOutlineColorLens />
                 </button>
+                {favoriteThemes ? 
                 <button style={buttonStyle} onClick={handleFavoriteThemes}>
                   {favoriteThemes?.includes(selectedTheme) ? <IoIosStar /> : <FaRegStar />}
                 </button>
+                : null}
                 {displayColorPicker && (
                   <div style={{ position: "absolute", zIndex: "2" }}>
                     <div
@@ -270,11 +361,13 @@ function App() {
             placeholder="Please enter code."
             onChange={handleInputChange}
             padding={15}
-            
+            onKeyDown={handleKeyDown}
             style={{
               ...themeStyles[selectedTheme],
               fontFamily:
                 "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
+              fontWeight: isBold ? 'bold' : 'normal', // Aplica el estilo de negrita según el estado
+              fontStyle: isItalic ? 'italic' : 'normal', // Aplica el estilo de cursiva según el estado
             }}
           />
         </div>
