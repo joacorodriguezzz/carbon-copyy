@@ -21,7 +21,7 @@ var corsOptions = {
 // route middlewares
 app.use(cors(corsOptions));
 app.use("/api/user", authRoutes);
-app.use("/api/favourites", favouritesRoutes);
+app.use("/api/favourites", verifyToken, favouritesRoutes);
 
 // Conexión a Base de datos
 const uri = `mongodb+srv://joacorodriguez:joacorodriguez@cluster0.sjzxkmd.mongodb.net/?retryWrites=true&w=majority`;
