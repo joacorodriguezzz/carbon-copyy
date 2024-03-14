@@ -2,11 +2,14 @@ import React, { useState, useRef } from "react";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { PiExportBold } from "react-icons/pi";
 import { FaRegStar } from "react-icons/fa";
+import { useEffect } from "react";
 import { MdOutlineColorLens } from "react-icons/md";
 import { ChromePicker } from "react-color";
 import CodeEditor from "@uiw/react-textarea-code-editor";
+import { IoIosStar } from "react-icons/io";
 import { toPng } from "html-to-image"; // Importar toPng específicamente
 import { Controlled as CodeMirror } from "react-codemirror2";
+import axios from "axios";
 
 function App() {
   const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`);
@@ -17,18 +20,41 @@ function App() {
   const [selectedTheme, setSelectedTheme] = useState("dark");
   const [favoriteThemes, setFavoriteThemes] = useState("");
 
+  // useEffect(async () => {
+  //   const email = localStorage.getItem("email");
+  //   console.log(email)
+
+  //   axios.get('http://localhost:3001/api/favourites', {
+  //     "auth-token": localStorage.getItem("token"),
+  //   }, {
+  //     email: email,
+  //   })
+  //   .then((response) => {
+  //     if (response.data.error) {
+  //       alert(response.data.error);
+  //       console.log("error");
+  //     } else {
+  //       setFavoriteThemes(response.data.data);
+  //       console.log(favoriteThemes)
+  //     }
+  //   }).catch((error) => {
+  //     console.error("Error:", error);
+  //   });
+  // }, []);
+
   const containerRef = useRef(null);
 
   const containerStyle = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    minHeight: "100vh",
-    backgroundColor: "#212529",
+    maxHeight:"200vh",
+    minHeight: "60.3vh",
+    backgroundColor: "#3a6bfa",
   };
 
   const subContainerStyle = {
-    backgroundColor: "#333",
+    backgroundColor: "#e98bbd",
     width: "800px",
     padding: "20px",
     borderRadius: "10px",
@@ -69,7 +95,7 @@ function App() {
     borderRadius: "5px",
     border: "none",
     backgroundColor: "#666",
-    color: "#fff",
+    color: "#ffffff",
     cursor: "pointer",
     transition: "box-shadow 0.3s",
   };
@@ -78,6 +104,7 @@ function App() {
     dark: {
       backgroundColor: "#1E1E1E",
       color: "#FFFFFF",
+      
     },
     light: {
       backgroundColor: "#FFFFFF",
@@ -139,8 +166,24 @@ function App() {
   };
 
   const handleFavoriteThemes = (event) => {
+    console.log(localStorage.getItem("token").toString());
     setFavoriteThemes(event.target.value);
+    axios.post("http://localhost:3001/api/favourites/add", {
+      theme: selectedTheme,
+      email: localStorage.getItem("email"),
+    }, {
+      "auth-token": localStorage.getItem("token"),
+    })
+    .then((response) => {
+      if (response.data.error) {
+        alert(response.data.error);
+        console.log("error");
+      } else {
+        alert("Tema favorito agregado correctamente");
+      }
+    })
   };
+
   const makeBold = (editor) => {
     const selectedText = editor.getSelection();
     const newText = `**${selectedText}**`; // Markdown para negrita
@@ -197,7 +240,7 @@ function App() {
                   <MdOutlineColorLens />
                 </button>
                 <button style={buttonStyle} onClick={handleFavoriteThemes}>
-                  <FaRegStar />
+                  {favoriteThemes?.includes(selectedTheme) ? <IoIosStar /> : <FaRegStar />}
                 </button>
                 {displayColorPicker && (
                   <div style={{ position: "absolute", zIndex: "2" }}>
@@ -227,7 +270,7 @@ function App() {
             placeholder="Please enter code."
             onChange={handleInputChange}
             padding={15}
-            options={options}
+            
             style={{
               ...themeStyles[selectedTheme],
               fontFamily:

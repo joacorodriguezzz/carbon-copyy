@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
 const authRoutes = require("./routes/auth");
+const favouritesRoutes = require("./routes/favourites");
 const verifyToken = require("./middlewares/verify-token.js");
 const cors = require("cors");
 require("dotenv").config();
@@ -18,8 +19,9 @@ var corsOptions = {
 };
 
 // route middlewares
-app.use("/api/user", authRoutes);
 app.use(cors(corsOptions));
+app.use("/api/user", authRoutes);
+app.use("/api/favourites", favouritesRoutes);
 
 // Conexión a Base de datos
 const uri = `mongodb+srv://joacorodriguez:joacorodriguez@cluster0.sjzxkmd.mongodb.net/?retryWrites=true&w=majority`;

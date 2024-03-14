@@ -1,5 +1,6 @@
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import React, { useState } from "react";
 import {
@@ -15,6 +16,7 @@ function Register() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -46,7 +48,7 @@ function Register() {
           console.log("error");
         } else {
           alert("Usuario registrado correctamente");
-          console.log("correcto");
+          navigate("/login");
         }
       })
       .catch((error) => {
@@ -61,32 +63,33 @@ function Register() {
     <MDBContainer className="p-3 my-5 d-flex flex-column w-50 bg-light">
       <MDBInput
         wrapperClass="mb-4"
-        label="Name"
+        placeholder="Name"
         id="name"
         onChange={handleNameChange}
       />
       <MDBInput
         wrapperClass="mb-4"
-        label="Lastname"
+        placeholder="Lastname"
         id="lastName"
         onChange={handleLastNameChange}
       />
       <MDBInput
         wrapperClass="mb-4"
-        label="Email address"
+        
+        placeholder="Email address"
         id="email"
         type="email"
         onChange={handleEmailChange}
       />
       <MDBInput
         wrapperClass="mb-4"
-        label="Password"
+        placeholder="Password"
         id="password"
         type="password"
         onChange={handlePasswordChange}
       />
       <div className="d-flex justify-content-between mx-3 mb-4"></div>
-      <MDBBtn onClick={handleRegister} className="mb-4">
+      <MDBBtn onClick={handleRegister} className="mb-4 bg-success">
         Register
       </MDBBtn>
       <div className="text-center">

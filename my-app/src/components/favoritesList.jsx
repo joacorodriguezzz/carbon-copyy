@@ -21,26 +21,26 @@ const themeStyles = {
   },
 };
 
-function FavoriteList() {
-  const [favorites, setFavorites] = useState([]);
-  const [selectedTheme, setSelectedTheme] = useState("");
-  const codeEditorRef = useRef(null);
+// function FavoriteList() {
+//   const [favorites, setFavorites] = useState([]);
+//   const [selectedTheme, setSelectedTheme] = useState("");
+//   const codeEditorRef = useRef(null);
 
-  useEffect(() => {
-    fetchFavorites();
-  }, []);
+//   useEffect(() => {
+//     fetchFavorites();
+//   }, []);
 
-  const fetchFavorites = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:3001/api/favorites", {
-        headers: { "auth-token": token },
-      });
-      setFavorites(response.data.favorites);
-    } catch (error) {
-      console.error("Error fetching favorites:", error);
-    }
-  };
+//   const fetchFavorites = async () => {
+//     try {
+//       const token = localStorage.getItem("token");
+//       const response = await axios.get("http://localhost:3001/api/favorites", {
+//         headers: { "auth-token": token },
+//       });
+//       setFavorites(response.data.favorites);
+//     } catch (error) {
+//       console.error("Error fetching favorites:", error);
+//     }
+//   };
 
   const addFavorite = async () => {
     try {
@@ -93,6 +93,6 @@ function FavoriteList() {
       </div>
     </div>
   );
-}
+
 
 export default FavoriteList;

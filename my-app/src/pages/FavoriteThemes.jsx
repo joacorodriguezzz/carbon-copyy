@@ -24,38 +24,38 @@ function FavoriteList() {
   const [favorites, setFavorites] = useState([]);
   const [selectedTheme, setSelectedTheme] = useState("");
 
-  useEffect(() => {
-    fetchFavorites();
-  }, []);
+  // useEffect(() => {
+  //   fetchFavorites();
+  // }, []);
 
-  const fetchFavorites = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:3001/api/favorites", {
-        headers: { "auth-token": token },
-      });
-      setFavorites(response.data.favorites);
-    } catch (error) {
-      console.error("Error fetching favorites:", error);
-    }
-  };
+  // const fetchFavorites = async () => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     const response = await axios.get("http://localhost:3001/api/favorites", {
+  //       headers: { "auth-token": token },
+  //     });
+  //     setFavorites(response.data.favorites);
+  //   } catch (error) {
+  //     console.error("Error fetching favorites:", error);
+  //   }
+  // };
 
-  const addFavorite = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.post(
-        "http://localhost:3001/api/favorites/add",
-        { topic: selectedTheme },
-        {
-          headers: { "auth-token": token },
-        }
-      );
-      fetchFavorites(); // Actualizar la lista de temas favoritos después de agregar uno nuevo
-      setSelectedTheme("");
-    } catch (error) {
-      console.error("Error adding favorite:", error);
-    }
-  };
+  // const addFavorite = async () => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     await axios.post(
+  //       "http://localhost:3001/api/favorites/add",
+  //       { topic: selectedTheme },
+  //       {
+  //         headers: { "auth-token": token },
+  //       }
+  //     );
+  //     fetchFavorites(); // Actualizar la lista de temas favoritos después de agregar uno nuevo
+  //     setSelectedTheme("");
+  //   } catch (error) {
+  //     console.error("Error adding favorite:", error);
+  //   }
+  // };
 
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
@@ -88,7 +88,7 @@ function FavoriteList() {
               </option>
             ))}
           </select>
-          <button onClick={addFavorite}>Add Favorite</button>
+          {/* <button onClick={addFavorite}>Add Favorite</button> */}
         </div>
         <ul>
           {favorites.map((favorite, index) => (
