@@ -7,10 +7,8 @@ import { MdOutlineColorLens } from "react-icons/md";
 import { ChromePicker } from "react-color";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import { IoIosStar } from "react-icons/io";
-import { toPng } from "html-to-image"; // Importar toPng específicamente
-import { Controlled as CodeMirror } from "react-codemirror2";
+import { toPng } from "html-to-image";
 import axios from "axios";
-import { useSelector } from "react-redux";
 
 function TextInput() {
   const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`);
@@ -21,33 +19,36 @@ function TextInput() {
   const [selectedTheme, setSelectedTheme] = useState("dark");
   const [favoriteThemes, setFavoriteThemes] = useState([]);
   const [email, setEmail] = useState("");
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
-  const [showFavorites, setShowFavorites] = useState(false);
-  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     handleGetFavoriteThemes();
   }, []);
 
   const handleGetFavoriteThemes = () => {
-    axios.post("http://localhost:3001/api/favourites", {
-      email: localStorage.getItem("email"),
-    }, {
-      headers: { "auth-token": localStorage.getItem("token") },
-    })
-    .then((response) => {
-      if (response.data.error) {
-        alert(response.data.error);
-        console.log("error");
-      } else {
-        // setShowFavorites(!showFavorites)
-        setFavoriteThemes(response.data.data);
-      }
-    }).catch((error) => {
-      console.error("Error:", error);
-    });
+    axios
+      .post(
+        "http://localhost:3001/api/favourites",
+        {
+          email: localStorage.getItem("email"),
+        },
+        {
+          headers: { "auth-token": localStorage.getItem("token") },
+        }
+      )
+      .then((response) => {
+        if (response.data.error) {
+          alert(response.data.error);
+          console.log("error");
+        } else {
+          setFavoriteThemes(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const containerRef = useRef(null);
@@ -56,8 +57,8 @@ function TextInput() {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    maxHeight:"200vh",
-    minHeight: "60.3vh",
+    maxHeight: "200vh",
+    minHeight: "58.8vh",
     backgroundColor: "#3a6bfa",
   };
 
@@ -112,7 +113,6 @@ function TextInput() {
     dark: {
       backgroundColor: "#1E1E1E",
       color: "#FFFFFF",
-      
     },
     light: {
       backgroundColor: "#FFFFFF",
@@ -162,7 +162,7 @@ function TextInput() {
   };
 
   const handleExportClick = () => {
-    toPng(containerRef.current) // Utilizar el método toPng importado
+    toPng(containerRef.current)
       .then((dataUrl) => {
         const link = document.createElement("a");
         link.download = "code_image.png";
@@ -175,80 +175,56 @@ function TextInput() {
   };
 
   const handleFavoriteThemes = (event) => {
-    axios.post("http://localhost:3001/api/favourites/add", {
-      theme: selectedTheme,
-      email: localStorage.getItem("email"),
-    }, {
-      headers: { "auth-token": localStorage.getItem("token") },
-    })
-    .then((response) => {
-      if (response.data.error) {
-        alert(response.data.error);
-        console.log("error");
-      } else {
-        // setFavoriteThemes((prev) => [...prev, selectedTheme]);
-        handleGetFavoriteThemes();
-        handleGetFavoriteThemes();
-        handleGetFavoriteThemes();
-        handleGetFavoriteThemes();
-        handleGetFavoriteThemes();
-        handleGetFavoriteThemes();
-        handleGetFavoriteThemes();
-      }
-    })
+    axios
+      .post(
+        "http://localhost:3001/api/favourites/add",
+        {
+          theme: selectedTheme,
+          email: localStorage.getItem("email"),
+        },
+        {
+          headers: { "auth-token": localStorage.getItem("token") },
+        }
+      )
+      .then((response) => {
+        if (response.data.error) {
+          alert(response.data.error);
+          console.log("error");
+        } else {
+          setFavoriteThemes((prev) => [...prev, selectedTheme]);
+          handleGetFavoriteThemes();
+          handleGetFavoriteThemes();
+          handleGetFavoriteThemes();
+          handleGetFavoriteThemes();
+          handleGetFavoriteThemes();
+        }
+      });
   };
-
-  const makeBold = (editor) => {
-    const selectedText = editor.getSelection();
-    const newText = `**${selectedText}**`; // Markdown para negrita
-    editor.replaceSelection(newText);
-  };
-
-  const options = {
-    lineNumbers: true,
-    mode: "markdown", // Modo markdown para resaltar correctamente el texto en negrita
-    theme: "material",
-    extraKeys: {
-      "Ctrl-B": (editor) => {
-        makeBold(editor); // Llamar a la función makeBold cuando se presiona Ctrl + B
-      },
-    },
-  };
-
 
   const handleKeyDown = (event) => {
-    // Verifica si se presiona la tecla deseada, por ejemplo, la tecla 'Ctrl' junto con 'b'
-    if (event.ctrlKey && event.key === 'b') {
-      // Cambia el estado de negrita
+    if (event.ctrlKey && event.key === "b") {
       setIsBold(!isBold);
-      // Evita que se realice la acción por defecto asociada a esa combinación de teclas (por ejemplo, guardar la página)
+
       event.preventDefault();
     }
 
-    if (event.ctrlKey && event.key === 'l') {
-      // cambia a cursiva
+    if (event.ctrlKey && event.key === "l") {
       setIsItalic(!isItalic);
       event.preventDefault();
     }
   };
 
-
   useEffect(() => {
     function handleKeyDown(event) {
-      // Verifica si se presiona la tecla deseada, por ejemplo, la tecla 'Ctrl' junto con 'S'
-      if (event.ctrlKey && event.key === 's') {
-        // Ejecuta la acción que deseas realizar cuando se presione el atajo de teclado
-        console.log('Guardando...');
-        // Agrega aquí tu lógica adicional, como guardar datos o activar alguna función
+      if (event.ctrlKey && event.key === "s") {
+        console.log("Guardando...");
       }
     }
 
-    // Agrega un listener de eventos de teclado cuando el componente se monta
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
-    // Remueve el listener de eventos de teclado cuando el componente se desmonta
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
@@ -267,6 +243,9 @@ function TextInput() {
               <option value="html">HTML</option>
             </select>
             <select style={selectStyle} onChange={handleThemeChange}>
+              <option value="theme" hidden>
+                Theme
+              </option>
               <option value="dark">Dark</option>
               <option value="light">Light</option>
               <option value="duotoneDark">Duotone Dark</option>
@@ -287,11 +266,15 @@ function TextInput() {
                 <button style={buttonStyle} onClick={handleClick}>
                   <MdOutlineColorLens />
                 </button>
-                {user.email ? 
-                <button style={buttonStyle} onClick={handleFavoriteThemes}>
-                  {favoriteThemes?.includes(selectedTheme) ? <IoIosStar /> : <FaRegStar />}
-                </button>
-                : null}
+                {favoriteThemes ? (
+                  <button style={buttonStyle} onClick={handleFavoriteThemes}>
+                    {favoriteThemes?.includes(selectedTheme) ? (
+                      <IoIosStar />
+                    ) : (
+                      <FaRegStar />
+                    )}
+                  </button>
+                ) : null}
                 {displayColorPicker && (
                   <div style={{ position: "absolute", zIndex: "2" }}>
                     <div
@@ -325,24 +308,10 @@ function TextInput() {
               ...themeStyles[selectedTheme],
               fontFamily:
                 "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
-              fontWeight: isBold ? 'bold' : 'normal', // Aplica el estilo de negrita según el estado
-              fontStyle: isItalic ? 'italic' : 'normal', // Aplica el estilo de cursiva según el estado
+              fontWeight: isBold ? "bold" : "normal",
+              fontStyle: isItalic ? "italic" : "normal",
             }}
           />
-          <div>
-            <button onClick={() => {
-              setShowFavorites(!showFavorites);
-              handleGetFavoriteThemes();
-            }
-            } style={buttonStyle}>Show Favorites</button>
-          </div>
-          {showFavorites ? (
-          <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
-            {favoriteThemes.map((theme) => (
-              theme != '1' ? <p key={theme} style={{ border: "1px solid #fff", padding: "5px", borderRadius: "5px", margin: "5px", width: "fit-content" }}>{theme}</p> : null
-            ))}
-          </div>
-          ) : null}
         </div>
       </div>
     </div>

@@ -4,11 +4,11 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 router.post("/register", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const email = req.body.email;
   const isEmailExist = await User.findOne({ email: req.body.email });
   const re = /\S+@\S+\.\S+/;
-  
+
   if (!re.test(email)) {
     return res.status(400).json({ error: "Email no válido" });
   }
@@ -20,7 +20,7 @@ router.post("/register", async (req, res) => {
   // hash contraseña
   const salt = await bcrypt.genSalt(10);
   const password = await bcrypt.hash(req.body.password, salt);
-  
+
   const user = new User({
     name: req.body.name,
     email: req.body.email,
@@ -28,10 +28,9 @@ router.post("/register", async (req, res) => {
     lastName: req.body.lastName,
     favoriteThemes: [1],
   });
-  
+
   try {
     const savedUser = await user.save();
-    console.log('holaaa')
     res.json({
       error: null,
       data: savedUser,
@@ -42,8 +41,7 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  console.log('hola')
-  console.log(User)
+  // console.log(User);
   const user = await User.findOne({ email: req.body.email });
   if (!user) return res.status(400).json({ error: "Usuario no encontrado" });
 
@@ -51,7 +49,7 @@ router.post("/login", async (req, res) => {
   if (!validPassword)
     return res.status(400).json({ error: "contraseña no válida" });
 
-  // create token
+  // crear token
   const token = jwt.sign(
     {
       name: user.name,

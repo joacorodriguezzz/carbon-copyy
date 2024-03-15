@@ -1,15 +1,7 @@
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import React, { useState } from "react";
-import {
-  MDBContainer,
-  MDBInput,
-  MDBCheckbox,
-  MDBBtn,
-  MDBIcon,
-} from "mdb-react-ui-kit";
+import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
 
 function Register() {
   const [name, setName] = useState("");
@@ -75,7 +67,6 @@ function Register() {
       />
       <MDBInput
         wrapperClass="mb-4"
-        
         placeholder="Email address"
         id="email"
         type="email"
@@ -89,7 +80,11 @@ function Register() {
         onChange={handlePasswordChange}
       />
       <div className="d-flex justify-content-between mx-3 mb-4"></div>
-      <MDBBtn onClick={handleRegister} className="mb-4 bg-success">
+      <MDBBtn
+        onClick={handleRegister}
+        className="mb-4 bg-success"
+        style={{ width: "100%", height: "30px" }}
+      >
         Register
       </MDBBtn>
       <div className="text-center">

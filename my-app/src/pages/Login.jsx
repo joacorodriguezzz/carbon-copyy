@@ -1,10 +1,9 @@
-import Button from "react-bootstrap/Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
 import { useSelector, useDispatch } from "react-redux";
-import {setUser} from "../state/reducerUser";
+import { setUser } from "../state/reducerUser";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -12,7 +11,6 @@ function Login() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -49,14 +47,14 @@ function Login() {
     <MDBContainer className="p-3 my-5 d-flex flex-column w-50  bg-light">
       <MDBInput
         wrapperClass="mb-4"
-  placeholder="Email address"
+        placeholder="Email address"
         id="form1"
         type="email"
         onChange={handleEmailChange}
       />
       <MDBInput
         wrapperClass="mb-4"
-  placeholder="Password"
+        placeholder="Password"
         id="form2"
         type="password"
         onChange={handlePasswordChange}
@@ -64,7 +62,11 @@ function Login() {
 
       <div className="d-flex justify-content-between mx-3 mb-4"></div>
 
-      <MDBBtn onClick={handleLogin} className="mb-4 bg-success">
+      <MDBBtn
+        onClick={handleLogin}
+        className="mb-4 bg-success"
+        style={{ width: "100%", height: "30px" }}
+      >
         Sign in
       </MDBBtn>
 

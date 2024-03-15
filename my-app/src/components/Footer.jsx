@@ -1,17 +1,8 @@
 import React from "react";
-import {
-  MDBFooter,
-  MDBContainer,
-  MDBCol,
-  MDBRow,
-  MDBIcon,
-  MDBBtn,
-} from "mdb-react-ui-kit";
+import { MDBFooter, MDBContainer, MDBIcon, MDBBtn } from "mdb-react-ui-kit";
 import { FaLinkedin } from "react-icons/fa";
 import { BiLogoInstagramAlt } from "react-icons/bi";
 import { SiGithub } from "react-icons/si";
-
-
 
 export default function Footer() {
   return (
@@ -93,19 +84,21 @@ export default function Footer() {
         className="text-center text-dark p-3 bg-primary"
         style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
       >
-        <a className="text-dark ml-" href="https://www.linkedin.com/in/joaquinrodriguezareces/">
-        <FaLinkedin />
-
+        <a
+          className="text-dark ml-"
+          href="https://www.linkedin.com/in/joaquinrodriguezareces/"
+        >
+          <FaLinkedin />
         </a>
 
-        <a className="text-dark" href="https://www.instagram.com/joacorodriguezz/">
-        <BiLogoInstagramAlt />
-
+        <a
+          className="text-dark"
+          href="https://www.instagram.com/joacorodriguezz/"
+        >
+          <BiLogoInstagramAlt />
         </a>
         <a className="text-dark" href="https://github.com/joacorodriguezzz">
-        <SiGithub />
-
-
+          <SiGithub />
         </a>
       </div>
     </MDBFooter>

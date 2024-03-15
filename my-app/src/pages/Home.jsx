@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import TextInput from "../components/TextInput";
 import Footer from "../components/Footer";
 
 export default function Home() {
-
   return (
     <div className="HomeStyle bg-primary text-success">
       <div className="h-200px bg-primary text-light ">
@@ -15,7 +13,7 @@ export default function Home() {
           drop a file into the text area to get started.
         </p>
       </div>
-        <TextInput />
+      <TextInput />
       <Footer />
     </div>
   );

@@ -23,7 +23,6 @@ export default function Highlighter() {
               if (node.properties?.className?.includes("code-line")) {
                 if (index === 0 && node.properties?.className) {
                   node.properties.className.push("demo01");
-                  // console.log("~~~", index, node.properties?.className);
                 }
               }
               if (

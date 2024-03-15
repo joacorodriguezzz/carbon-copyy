@@ -1,38 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
-import { setUser } from '../state/reducerUser';
+import React, { useState } from "react";
+import { Navbar, Container, Nav } from "react-bootstrap";
 import { MdInvertColors } from "react-icons/md";
-import { useDispatch, useSelector } from 'react-redux';
 
-
-const NavBar = () => {
+const NavBar = ({ user }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const email = localStorage.getItem('email');
-  const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
   };
 
   return (
-    <div className={`Navbar ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
-      <Navbar expand="lg" className={`bg-${isDarkMode ? 'dark' : 'light'} text-${isDarkMode ? 'light' : 'dark'}`}>
+    <div className={`Navbar ${isDarkMode ? "dark-mode" : "light-mode"}`}>
+      <Navbar expand="lg" className={`bg-${isDarkMode ? "dark" : "light"}`}>
         <Container>
-          <Navbar.Brand href="/">Carbon Copy</Navbar.Brand>
+          <Navbar.Brand
+            href="/"
+            className={`text-${isDarkMode ? "light" : "dark"}`}
+          >
+            Carbon Copy
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-              {!user.email ? (
-                <Nav className="me-auto">
-                  <Nav.Link href="/login">Login</Nav.Link>
-                  <Nav.Link href="/register">SignUp</Nav.Link>
-                </Nav>
-              ) : (
-                <button onClick={() => dispatch(setUser({ email: null }))} className="btn btn-sm btn-primary">Logout</button>
-              )}
+            <Nav className="me-auto">
+              <Nav.Link
+                href="/login"
+                className={`text-${isDarkMode ? "light" : "dark"}`}
+              >
+                Login
+              </Nav.Link>
+              <Nav.Link
+                href="/register"
+                className={`text-${isDarkMode ? "light" : "dark"}`}
+              >
+                SignUp
+              </Nav.Link>
+            </Nav>
           </Navbar.Collapse>
-          <button onClick={toggleDarkMode} className="btn btn-sm btn-primary"><MdInvertColors />
+          <button onClick={toggleDarkMode} className="btn btn-sm btn-primary ">
+            <MdInvertColors />
           </button>
         </Container>
       </Navbar>
@@ -40,4 +45,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default NavBar;
