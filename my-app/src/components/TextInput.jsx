@@ -186,7 +186,7 @@ function TextInput() {
         alert(response.data.error);
         console.log("error");
       } else {
-        setFavoriteThemes((prev) => [...prev, selectedTheme]);
+        // setFavoriteThemes((prev) => [...prev, selectedTheme]);
         handleGetFavoriteThemes();
         handleGetFavoriteThemes();
         handleGetFavoriteThemes();
