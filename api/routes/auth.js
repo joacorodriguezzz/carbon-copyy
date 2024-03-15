@@ -5,11 +5,18 @@ const bcrypt = require("bcrypt");
 
 router.post("/register", async (req, res) => {
   console.log(req.body);
+  const email = req.body.email;
   const isEmailExist = await User.findOne({ email: req.body.email });
+  const re = /\S+@\S+\.\S+/;
+  
+  if (!re.test(email)) {
+    return res.status(400).json({ error: "Email no válido" });
+  }
+
   if (isEmailExist) {
     return res.status(400).json({ error: "Email ya registrado" });
   }
-  
+
   // hash contraseña
   const salt = await bcrypt.genSalt(10);
   const password = await bcrypt.hash(req.body.password, salt);

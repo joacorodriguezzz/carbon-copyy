@@ -10,8 +10,9 @@ import { IoIosStar } from "react-icons/io";
 import { toPng } from "html-to-image"; // Importar toPng específicamente
 import { Controlled as CodeMirror } from "react-codemirror2";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
-function App() {
+function TextInput() {
   const [code, setCode] = useState(`function add(a, b) {\n  return a + b;\n}`);
   const [backgroundColor, setBackgroundColor] = useState("#555");
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
@@ -23,57 +24,12 @@ function App() {
   const [text, setText] = useState('');
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
-
-  // useEffect(async () => {
-  //   const email = localStorage.getItem("email");
-  //   console.log(email)
-
-  //   axios.get('http://localhost:3001/api/favourites', {
-  //     "auth-token": localStorage.getItem("token"),
-  //   }, {
-  //     email: email,
-  //   })
-  //   .then((response) => {
-  //     if (response.data.error) {
-  //       alert(response.data.error);
-  //       console.log("error");
-  //     } else {
-  //       setFavoriteThemes(response.data.data);
-  //       console.log(favoriteThemes)
-  //     }
-  //   }).catch((error) => {
-  //     console.error("Error:", error);
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   setEmail(localStorage.getItem("email"));
-  // }, []);
-
-  // useEffect(() => {
-  //   fetchFavorites();
-  // }, []);
-
-  // const fetchFavorites = async () => {
-  //   try {
-  //     console.log('hola')
-  //     console.log(email)
-  //     console.log(localStorage.getItem("email"));
-  //     const token = localStorage.getItem("token");
-  //     const email = localStorage.getItem("email");
-  //     const response = await axios.get("http://localhost:3001/api/favourites", {
-  //       headers: { "auth-token": token }, body: { email: email }
-  //     });
-  //     setFavoriteThemes(response.data.favorites);
-  //   } catch (error) {
-  //     console.error("Error fetching favorites:", error);
-  //   }
-  // };
+  const [showFavorites, setShowFavorites] = useState(false);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     handleGetFavoriteThemes();
   }, []);
-
 
   const handleGetFavoriteThemes = () => {
     axios.post("http://localhost:3001/api/favourites", {
@@ -86,6 +42,7 @@ function App() {
         alert(response.data.error);
         console.log("error");
       } else {
+        // setShowFavorites(!showFavorites)
         setFavoriteThemes(response.data.data);
       }
     }).catch((error) => {
@@ -235,6 +192,8 @@ function App() {
         handleGetFavoriteThemes();
         handleGetFavoriteThemes();
         handleGetFavoriteThemes();
+        handleGetFavoriteThemes();
+        handleGetFavoriteThemes();
       }
     })
   };
@@ -328,7 +287,7 @@ function App() {
                 <button style={buttonStyle} onClick={handleClick}>
                   <MdOutlineColorLens />
                 </button>
-                {favoriteThemes ? 
+                {user.email ? 
                 <button style={buttonStyle} onClick={handleFavoriteThemes}>
                   {favoriteThemes?.includes(selectedTheme) ? <IoIosStar /> : <FaRegStar />}
                 </button>
@@ -370,10 +329,24 @@ function App() {
               fontStyle: isItalic ? 'italic' : 'normal', // Aplica el estilo de cursiva según el estado
             }}
           />
+          <div>
+            <button onClick={() => {
+              setShowFavorites(!showFavorites);
+              handleGetFavoriteThemes();
+            }
+            } style={buttonStyle}>Show Favorites</button>
+          </div>
+          {showFavorites ? (
+          <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+            {favoriteThemes.map((theme) => (
+              theme != '1' ? <p key={theme} style={{ border: "1px solid #fff", padding: "5px", borderRadius: "5px", margin: "5px", width: "fit-content" }}>{theme}</p> : null
+            ))}
+          </div>
+          ) : null}
         </div>
       </div>
     </div>
   );
 }
 
-export default App;
+export default TextInput;

@@ -3,11 +3,16 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
+import { useSelector, useDispatch } from "react-redux";
+import {setUser} from "../state/reducerUser";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -30,6 +35,7 @@ function Login() {
           const token = data.data;
           localStorage.setItem("token", token.data.token);
           localStorage.setItem("email", email);
+          dispatch(setUser({ email: email }));
           alert("Usuario logueado correctamente");
           navigate("/");
         }
